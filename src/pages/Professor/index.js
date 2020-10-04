@@ -5,20 +5,17 @@ import { toast } from 'react-toastify';
 import Page from '../../components/Page';
 import api from '../../services/api';
 
-export default () => {
+export default (props) => {
   const [professors, setProfessors] = useState([]);
+  const { history } = props;
 
-  const getProfessors = () => {
+  useEffect(() => {
     api.get('/professor').then((response) => {
       const { data } = response;
       setProfessors(data);
-    }).catch((error) => {
-      console.log(error);
+    }).catch(() => {
+      toast.error('Unexpected Error');
     });
-  };
-
-  useEffect(() => {
-    getProfessors();
   }, []);
 
   const onDelete = (id) => {
@@ -38,7 +35,7 @@ export default () => {
       <Link className="btn btn-primary" to="/professor/new">Create Professor</Link>
       <Table className="mt-4">
         <thead>
-          <tr>
+          <tr >
             <th>ID</th>
             <th>Name</th>
             <th>CPF</th>
@@ -49,10 +46,11 @@ export default () => {
           {professors.map((professor, index) => (
             <tr key={index}>
               <td>{professor.id}</td>
-              <td><Link to={`/professor/${professor.id}`}>{professor.name}</Link></td>
+              <td>{professor.name}</td>
               <td>{professor.cpf}</td>
               <td>
-                <Button onClick={() => onDelete(professor.id)} color="danger">Delete</Button>
+              <Button size="sm" color="secondary" onClick={ () => {history.push(`/professor/${professor.id}`)}}>Edit</Button>{' '}
+              <Button size="sm" onClick={() => onDelete(professor.id)} color="danger">Delete</Button>
               </td>
             </tr>
           ))}

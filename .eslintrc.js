@@ -22,12 +22,12 @@ module.exports = {
     'react',
   ],
   rules: {
-    'react/jsx-filename-extension': [
-      'error',
+    "react/jsx-filename-extension": [
+      "error",
       {
-        extensions: ['.js', '.jsx'],
-      },
+          "extensions": [".js", ".jsx"]
+      }
     ],
-    'react/prop-types': 0,
+    "react/prop-types": 0,
   },
 };

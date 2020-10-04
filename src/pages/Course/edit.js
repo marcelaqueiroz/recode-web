@@ -1,38 +1,53 @@
 import React, {useState, useEffect} from 'react';
+import { toast } from 'react-toastify';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import Page from '../../components/Page';
 import api from '../../services/api';
 
 export default function Edit(props) {
-    const {match : { params : { id } } } = props;    
+    const [form, setForm] = useState({name:''});
+    
+    const { history, match : { params : { id } } } = props;    
     const isNewCourse = id === 'new';
 
-    const [courses, setCourses] = useState([]);
+    const onError = () => {
+      toast.error('Unexpected Error');
+    };
+
+    const onSuccess = () => {
+      const action = isNewCourse ? 'Created' : 'Updated';
+      toast.info(`${action} with Success`);
+      history.push('/course');
+    };
 
     useEffect(() => {
-        api.get('/course').then((response) => {
-          const { data } = response;
-          setCourses(data);
-        }).catch((error) => {
-          console.log(error);
-        });
-      }, []);
+      if(!isNewCourse) {
+        api.get(`/course/${id}`)
+        .then(({data}) => {
+          setForm({
+            name: data.name,
+          });
+        })
+        .catch(onError) 
+      }
+    }, [id, isNewCourse]);
 
     const onSubmit =() =>{
-        if (isNewCourse){
-            api.post('/course',{}).then().catch();
+      const formData ={
+        ...form,
+      };  
+      if (isNewCourse){
+          api.post('/course',formData)
+          .then(onSuccess)
+          .catch(onError);
         } else {
-            api.put(`/course/${id}`, {}).then().catch();
+            api.put(`/course/${id}`, formData)
+            .then(onSuccess)
+            .catch(onError);
         }
     };
-    
-
-    const [form, setForm] = useState({
-        name: courses.name,
-        departament: courses.departament
-      });
-      
-      const onChange = (event) => {
+  
+    const onChange = (event) => {
         const {
           target: { name, value },
         } = event;
@@ -44,19 +59,16 @@ export default function Edit(props) {
       };
 
      
-      return (
-        <Page title={isNewCourse ? 'Create Course' : 'Edit Course'}>
+    return (
+      <Page title={isNewCourse ? 'Create Course' : 'Edit Course'}>
             <Form>        
-              <FormGroup key={id}>
-                <Label for="name">Name</Label>
-                <Input type="text" value={courses.name} name="name" id="name" onChange={onChange} />
-              </FormGroup>
               <FormGroup>
-                <Label for="departament">Departament</Label>
-                <Input type="text" value={courses.departament} name="departament" id="departament" onChange={onChange}/>
-              </FormGroup>        
+                <Label for="name">Name</Label>
+                <Input type="text" value={form.name} name="name" id="name" onChange={onChange} />
+              </FormGroup>
             </Form> 
-            <Button onClick={onSubmit}>Save</Button>
+            <Button color="secondary" onClick={()=>{history.goBack()}}> Cancel </Button> {' '}
+            <Button color="primary" onClick={onSubmit}>Save</Button>
         </Page>
       );
 }

@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button, Input, FormGroup, Label,
-} from 'reactstrap';
+import {  Button, Input, FormGroup, Label } from 'reactstrap';
 import { toast } from 'react-toastify';
 import Page from '../../components/Page';
 import api from '../../services/api';
 
 export default function Edit(props) {
   const [form, setForm] = useState({ cpf: '', departament: '', name: '' });
-  const [departaments, setDepartaments] = useState([]);
+  const [departaments, setDepartments] = useState([]);
 
   const { history, match: { params: { id } } } = props;
   const isNewProfessor = id === 'new';
@@ -33,7 +31,7 @@ export default function Edit(props) {
 
   useEffect(() => {
     api.get('/departament')
-      .then(({ data }) => setDepartaments(data))
+      .then(({ data }) => setDepartments(data))
       .catch(onError);
   }, []);
 
@@ -110,7 +108,8 @@ export default function Edit(props) {
           </Input>
         </FormGroup>
       </div>
-      <Button onClick={onSubmit}>Save</Button>
+      <Button color="secondary" onClick={()=>{history.goBack()}}> Cancel </Button> {' '}
+      <Button color="primary" onClick={onSubmit}>Save</Button> 
     </Page>
   );
 }
