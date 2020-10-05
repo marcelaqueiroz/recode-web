@@ -130,7 +130,7 @@ export default function Edit(props) {
           <Input
             value={form.startHour}
             name="startHour"
-            type="number"
+            type="text"
             onChange={onChange}
           />
         </FormGroup>
@@ -139,7 +139,7 @@ export default function Edit(props) {
           <Input
             value={form.endHour}
             name="endHour"
-            type="number"
+            type="text"
             onChange={onChange}
           />
         </FormGroup>

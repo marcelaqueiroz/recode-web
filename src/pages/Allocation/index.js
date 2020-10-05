@@ -8,9 +8,6 @@ import api from '../../services/api';
 export default function Index(props) {
   const {history} = props
   const [allocations, setAllocations] = useState ([]);
-
-  /*const [courses, setCourses] = useState([]);
-  const [professors, setProfessors] = useState([]);*/
   
   const onError = () =>{
     toast.error('Unexpected Error');
@@ -38,16 +35,8 @@ export default function Index(props) {
       .catch(onError);
     }
   };
-  
-  /*const allocationData = {
-    ...allocations,
-    course: {
-      id: allocations.course,
-    },
-    professor:{
-      id: allocations.professor,
-    }
-  };*/
+
+
 
   return (
     <Page title="Allocation">
@@ -68,11 +57,11 @@ export default function Index(props) {
           {allocations.map((allocation, index) => (
             <tr key={index}>
               <td>{allocation.id}</td>
-              <td>{allocation.course.id}</td>
+              <td>{allocation.course.name}</td>
               <td>{allocation.day}</td>
               <td>{allocation.start}</td>
               <td>{allocation.end}</td>
-              <td>{allocation.professor.id}</td>
+              <td>{allocation.professor.name}</td>
               <td>
               <Button size="sm" color="secondary" onClick={ () => {history.push(`/allocation/${allocation.id}`)}}>Edit</Button>{' '}
               <Button size="sm" onClick={() => onDelete(allocation.id)} color="danger">Delete</Button>
