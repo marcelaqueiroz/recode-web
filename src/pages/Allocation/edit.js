@@ -5,7 +5,7 @@ import Page from '../../components/Page';
 import api from '../../services/api';
 
 export default function Edit(props) {
-  const [form, setForm] = useState({ day: '', start: '', end: '', course: '', professor: '' });
+  const [form, setForm] = useState({ dayOfWeek: '', startHour: '', endHour: '', course: '', professor: '' });
   const [courses, setCourses] = useState([]);
   const [professors, setProfessors] = useState([]);
 
@@ -21,9 +21,9 @@ export default function Edit(props) {
       api.get(`/allocation/${id}`)
         .then(({ data }) => {
           setForm({
-            day: data.dayOfWeek,
-            start: data.startHour,
-            end: data.endHour,
+            dayOfWeek: data.dayOfWeek,
+            startHour: data.startHour,
+            endHour: data.endHour,
             course: data.course.id,
             professor: data.professor.id,
           });
@@ -79,6 +79,8 @@ export default function Edit(props) {
     });
   };
 
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
   return (
     <Page title={isNewAllocation ? 'Create Allocation' : 'Edit Allocation'}>
       <Form>
@@ -103,20 +105,41 @@ export default function Edit(props) {
           </Input>
         </FormGroup>
         <FormGroup>
+          <Label>Day</Label>
+          <Input
+            value={form.dayOfWeek}
+            name="dayOfWeek"
+            type="select"
+            onChange={onChange}
+          >
+            <option value="">Select a day</option> 
+            {days.map((day, index) => (
+              <option
+                value={day}
+                key={index}
+              >
+                {day}
+
+              </option>
+            ))}
+          </Input>
+        </FormGroup>
+
+        <FormGroup>
           <Label>Start Hour</Label>
           <Input
-            value={form.start}
-            name="start"
-            type="text"
+            value={form.startHour}
+            name="startHour"
+            type="number"
             onChange={onChange}
           />
         </FormGroup>
         <FormGroup>
           <Label>End Hour</Label>
           <Input
-            value={form.end}
-            name="end"
-            type="text"
+            value={form.endHour}
+            name="endHour"
+            type="number"
             onChange={onChange}
           />
         </FormGroup>
